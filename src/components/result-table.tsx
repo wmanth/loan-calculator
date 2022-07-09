@@ -1,16 +1,15 @@
+import React from 'react'
 import { Table } from 'react-bootstrap'
+import { currencyFormatter, percentFormatter } from '../formatter'
 import { Month } from '../types'
 
 interface ResultTableProps {
 	data: Month[]
 }
 
-const currencyFormatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
-const percentFormatter = new Intl.NumberFormat('de-DE', { style: 'percent', minimumFractionDigits: 2})
-
 export default function ResultTable(props: ResultTableProps) {
-	return(
-		<Table size="sm" striped bordered>
+	return(props.data.length ? 
+		<Table size="sm" responsive striped bordered>
 			<thead>
 			<tr>
 					<th rowSpan={2}>Month</th>
@@ -37,6 +36,6 @@ export default function ResultTable(props: ResultTableProps) {
 						<td>{ currencyFormatter.format(month.loanRemaining) }</td>
 					</tr>)}
 			</tbody>
-		</Table>
+		</Table> : <React.Fragment />
 	)
 }
