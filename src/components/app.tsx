@@ -1,9 +1,10 @@
 import './app.css';
 import { Col, Form, Row } from 'react-bootstrap'
 import ResultTable from './result-table';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Month } from '../types';
 import Summary from './summary';
+import Chart from './chart';
 
 const defaultNumberOfYears = 10
 
@@ -62,36 +63,38 @@ export default function App() {
 	}, [totalLoan, numberOfYears, interestRate, initialAmortizationRate])
 
 	return(
-		<Form>
-			<Row className="mb-3">
-				<Form.Group as={ Col }>
-					<Form.Label>Total Loan</Form.Label>
-					<Form.Control type="number" placeholder="Enter ammount in €" onChange={ handleTotalChange }/>
-				</Form.Group>
-				<Form.Group as={ Col}>
-					<Form.Label>Duration</Form.Label>
-					<Form.Select onChange={ handleNumberOfYearsChange } defaultValue={ defaultNumberOfYears }>
-						<option value={5}>5 years</option>
-						<option value={10}>10 years</option>
-						<option value={15}>15 years</option>
-						<option value={20}>20 years</option>
-					</Form.Select>
-				</Form.Group>
-			</Row>
-			<Row className="mb-3">
-				<Form.Group as={Col}>
-					<Form.Label>Interest Rate in %</Form.Label>
-					<Form.Control type="number" min="0" max="100" step="0.01" placeholder="Enter your interest rate in %" onChange={ handleInterestRateChange }/>
-				</Form.Group>
-				<Form.Group as={Col}>
-					<Form.Label>Initial Ammortization Rate in %</Form.Label>
-					<Form.Control type="number" min="0" max="100" step="0.01" placeholder="Enter your initial rate in %" onChange={ handleInitialAmortizationRateChange }/>
-				</Form.Group>
-			</Row>
+		<React.Fragment>
+			<Form>
+				<Row className="mb-3">
+					<Form.Group as={ Col }>
+						<Form.Label>Total Loan</Form.Label>
+						<Form.Control type="number" placeholder="Enter ammount in €" onChange={ handleTotalChange }/>
+					</Form.Group>
+					<Form.Group as={ Col}>
+						<Form.Label>Duration</Form.Label>
+						<Form.Select onChange={ handleNumberOfYearsChange } defaultValue={ defaultNumberOfYears }>
+							<option value={5}>5 years</option>
+							<option value={10}>10 years</option>
+							<option value={15}>15 years</option>
+							<option value={20}>20 years</option>
+						</Form.Select>
+					</Form.Group>
+				</Row>
+				<Row className="mb-3">
+					<Form.Group as={Col}>
+						<Form.Label>Interest Rate in %</Form.Label>
+						<Form.Control type="number" min="0" max="100" step="0.01" placeholder="Enter your interest rate in %" onChange={ handleInterestRateChange }/>
+					</Form.Group>
+					<Form.Group as={Col}>
+						<Form.Label>Initial Ammortization Rate in %</Form.Label>
+						<Form.Control type="number" min="0" max="100" step="0.01" placeholder="Enter your initial rate in %" onChange={ handleInitialAmortizationRateChange }/>
+					</Form.Group>
+				</Row>
+			</Form>
 
 			<Summary data={ data } />
-
+			<Chart data={ data }/>
 			<ResultTable data={ data } />
-		</Form>
+		</React.Fragment>
 	)
 }
