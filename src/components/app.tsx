@@ -1,5 +1,6 @@
 import './app.css';
 import { Col, Form, Row } from 'react-bootstrap'
+import { useSearchParams } from 'react-router-dom'
 import ResultTable from './result-table';
 import React, { useEffect, useState } from 'react';
 import { Month } from '../types';
@@ -8,12 +9,16 @@ import Chart from './chart';
 
 const defaultNumberOfYears = 10
 
-export default function App() {
+export default function App(props: any) {
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [totalLoan, setTotalLoan] = useState(0)
 	const [numberOfYears, setNumberOfYears] = useState(defaultNumberOfYears)
 	const [interestRate, setInterestRate] = useState(0)
 	const [initialAmortizationRate, setInitialAmortizationRate] = useState(0)
 	const [data, setData] = useState<Month[]>([])
+
+	const l = searchParams.get("loan")
+	console.log(l)
 
 	const handleTotalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setTotalLoan(+e.target.value)
