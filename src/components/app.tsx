@@ -1,39 +1,54 @@
 import './app.css';
-import { Col, Form, Row } from 'react-bootstrap'
 import { useSearchParams } from 'react-router-dom'
 import ResultTable from './result-table';
 import React, { useEffect, useState } from 'react';
 import { Month } from '../types';
 import Summary from './summary';
 import Chart from './chart';
+import LoanInput from './loaninput';
 
 const defaultNumberOfYears = 10
+const kTotalLoanParam = "loan"
+const kNumberOfYearsParam = "years"
+const kInterestRateParam = "interest"
+const kInitialAmortizationRateParam = "rate"
 
 export default function App(props: any) {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const [totalLoan, setTotalLoan] = useState(0)
-	const [numberOfYears, setNumberOfYears] = useState(defaultNumberOfYears)
-	const [interestRate, setInterestRate] = useState(0)
-	const [initialAmortizationRate, setInitialAmortizationRate] = useState(0)
+
+	const numberFromUrlParam = (param: string, _default = 0) => {
+		const value = searchParams.get(param) ?? ""
+		return Number(value) || _default
+	}
+
+	const [totalLoan, setTotalLoan] = useState(numberFromUrlParam(kTotalLoanParam))
+	const [numberOfYears, setNumberOfYears] = useState(numberFromUrlParam(kNumberOfYearsParam, defaultNumberOfYears))
+	const [interestRate, setInterestRate] = useState(numberFromUrlParam(kInterestRateParam))
+	const [initialAmortizationRate, setInitialAmortizationRate] = useState(numberFromUrlParam(kInitialAmortizationRateParam))
 	const [data, setData] = useState<Month[]>([])
 
-	const l = searchParams.get("loan")
-	console.log(l)
-
-	const handleTotalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTotalLoan(+e.target.value)
+	const changeTotalLoan = (value: number) => {
+		searchParams.set(kTotalLoanParam, value.toString())
+		setSearchParams(searchParams)
+		setTotalLoan(value)
 	}
 
-	const handleNumberOfYearsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setNumberOfYears(+e.target.value)
+	const changeNumberOfYears = (value: number) => {
+		searchParams.set(kNumberOfYearsParam, value.toString())
+		setSearchParams(searchParams)
+		setNumberOfYears(value)
 	}
 
-	const handleInterestRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInterestRate(+e.target.value)
+	const changeInterestRate = (value: number) => {
+		searchParams.set(kInterestRateParam, value.toString())
+		setSearchParams(searchParams)
+		setInterestRate(value)
 	}
 
-	const handleInitialAmortizationRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInitialAmortizationRate(+e.target.value)
+	const changeInitialAmortizationRate = (value: number) => {
+		searchParams.set(kInitialAmortizationRateParam, value.toString())
+		setSearchParams(searchParams)
+		setInitialAmortizationRate(value)
 	}
 
 	useEffect(() => {
@@ -69,36 +84,13 @@ export default function App(props: any) {
 
 	return(
 		<React.Fragment>
-			<Form>
-				<Row className="mb-3">
-					<Form.Group as={ Col }>
-						<Form.Label>Total Loan</Form.Label>
-						<Form.Control type="number" placeholder="Enter ammount in €" onChange={ handleTotalChange }/>
-					</Form.Group>
-					<Form.Group as={ Col}>
-						<Form.Label>Duration</Form.Label>
-						<Form.Select onChange={ handleNumberOfYearsChange } defaultValue={ defaultNumberOfYears }>
-							<option value={5}>5 years</option>
-							<option value={10}>10 years</option>
-							<option value={15}>15 years</option>
-							<option value={20}>20 years</option>
-						</Form.Select>
-					</Form.Group>
-				</Row>
-				<Row className="mb-3">
-					<Form.Group as={Col}>
-						<Form.Label>Interest Rate in %</Form.Label>
-						<Form.Control type="number" min="0" max="100" step="0.01" placeholder="Enter your interest rate in %" onChange={ handleInterestRateChange }/>
-					</Form.Group>
-					<Form.Group as={Col}>
-						<Form.Label>Initial Ammortization Rate in %</Form.Label>
-						<Form.Control type="number" min="0" max="100" step="0.01" placeholder="Enter your initial rate in %" onChange={ handleInitialAmortizationRateChange }/>
-					</Form.Group>
-				</Row>
-			</Form>
-
+			<LoanInput
+				totalLoan={ totalLoan } changeTotalLoan={ changeTotalLoan }
+				numberOfYears={ numberOfYears } changeNumberOfYears={ changeNumberOfYears }
+				interestRate={ interestRate } changeInterestRate={ changeInterestRate }
+				initialAmortizationRate= { initialAmortizationRate } changeInitialAmortizationRate={ changeInitialAmortizationRate } />
 			<Summary data={ data } />
-			<Chart data={ data }/>
+			<Chart data={ data } />
 			<ResultTable data={ data } />
 		</React.Fragment>
 	)
