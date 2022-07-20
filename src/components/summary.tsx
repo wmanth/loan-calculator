@@ -12,7 +12,7 @@ export default function Summary(props: SummaryProps) {
 	const lastMonth = props.data[props.data.length-1]
 
 	return( firstMonth && lastMonth ?
-			<Table className="w-25" size="sm" borderless>
+			<Table className="d-sm-inline-flex" size="sm" borderless>
 				<tbody>
 					<tr>
 						<th>Montly Rate:</th>
